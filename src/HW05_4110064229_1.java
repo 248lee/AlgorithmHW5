@@ -1,82 +1,43 @@
 public class HW05_4110064229_1 extends littlebit {
     public int l_bit(int[] A) {
-        int itr = 0;
-        int total_rst = 0;
-        {
-            int tmpitr = itr;
-            int cul = 1;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] >= A[tmpitr]) {
-                cul += (A[tmpitr + 1] > A[tmpitr] ? 1 : 0);
-                tmpitr++;
+        if (A.length == 1)
+            return 1;
+        int sum = 0;
+        int tmp = 1;
+        boolean is_mtop = true;
+        for (int i = 0; i < A.length - 1; i++) {
+            if (A[i] <= A[i + 1]) {
+                if (is_mtop)
+                    is_mtop = false;
+                else
+                    sum += tmp;
+                if (A[i] != A[i + 1])
+                    tmp++;
+                continue;
             }
-            int mountain_top = cul;
-
-            cul = 1;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] <= A[tmpitr]) {
-                cul += (A[tmpitr + 1] < A[tmpitr] ? 1 : 0);
-                tmpitr++;
+            if (!is_mtop) {
+                A[i] = -tmp;
+                is_mtop = true;
             }
-            int mountain_feet = cul;
-
-            // start counting rst
-            cul = 1;
-            int rst = 0;
-            tmpitr = itr;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] >= A[tmpitr]) {
-                rst += cul;
-                cul += (A[tmpitr + 1] > A[tmpitr] ? 1 : 0);
-                tmpitr++;
-            }
-            rst += Math.max(mountain_feet, mountain_top);
-            cul = mountain_feet;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] <= A[tmpitr]) {
-                cul -= (A[tmpitr + 1] < A[tmpitr] ? 1 : 0);
-                rst += cul;
-                tmpitr++;
-            }
-            tmpitr++;
-            total_rst += rst;
-            itr = tmpitr;
+            tmp = 1;
         }
-
-        
-        while (itr < A.length)
-        {
-            int tmpitr = itr;
-            int cul = 2;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] >= A[tmpitr]) {
-                cul += (A[tmpitr + 1] > A[tmpitr] ? 1 : 0);
-                tmpitr++;
+        if (A.length >= 2 && A[A.length - 2] <= A[A.length - 1])
+            sum += tmp;
+        tmp = 1;
+        for (int i = A.length - 1; i > 0; i--) {
+            if (A[i] < 0) {
+                sum += Math.max(-A[i], tmp);
             }
-            int mountain_top = cul;
-
-            cul = 1;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] <= A[tmpitr]) {
-                cul += (A[tmpitr + 1] < A[tmpitr] ? 1 : 0);
-                tmpitr++;
+            else if (A[i] < A[i - 1] || A[i - 1] < 0) {
+                sum += tmp;
+                if (A[i] != A[i - 1])
+                    tmp++;
+                continue;
             }
-            int mountain_feet = cul;
-
-            // start counting rst
-            cul = 2;
-            int rst = 0;
-            tmpitr = itr;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] >= A[tmpitr]) {
-                rst += cul;
-                cul += (A[tmpitr + 1] > A[tmpitr] ? 1 : 0);
-                tmpitr++;
-            }
-            rst += Math.max(mountain_feet, mountain_top);
-            cul = mountain_feet;
-            while (tmpitr + 1 < A.length && A[tmpitr + 1] <= A[tmpitr]) {
-                cul -= (A[tmpitr + 1] < A[tmpitr] ? 1 : 0);
-                rst += cul;
-                tmpitr++;
-            }
-            tmpitr++;
-            total_rst += rst;
-            itr = tmpitr;
+            tmp = 1;
         }
-        return A.length != 0 ? total_rst : 0;
+        if (A.length >= 2 && A[0] >= A[1])
+            sum += tmp;
+        return sum;
     }
 }

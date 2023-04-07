@@ -1,47 +1,28 @@
 public class HW05_4110064229_3 extends littlebit {
     public int l_bit(int[] A) {
-        int rst = 0;
-        int n = A.length;
-
-        int i = 0;
-        int cnt, cul, num_same_cul, mountain_top;
-        {
-            cnt = 0;
-            cul = -1;
-            for (; i + 1 < n && A[i + 1] <= A[i]; i++, cnt++) {
-                rst += cul;
-                cul -= (A[i + 1] < A[i] ? 1 : 0);
-            }
-            rst += (-cul + 1) * cnt;
+        int[] money = new int[A.length];
+        for (int i = 0; i < money.length; i++) {
+            money[i] = 1;
         }
-        while (i < n) {
-            cul = 1;
-            num_same_cul = 0;
-            for (; i + 1 < n && A[i + 1] >= A[i]; i++) {
-                rst += cul;
-                if (A[i + 1] > A[i]) {
-                    cul++;
-                    num_same_cul = 0;
-                }
-                else {
-                    num_same_cul++;
-                }
+        for (int i = 0; i < A.length - 1; i++) {
+            if (A[i] < A[i + 1]) {
+                money[i + 1] = money[i] + 1;
             }
-            rst -= cul * num_same_cul;
-            mountain_top = cul;
-            i++;
-            cnt = 0;
-            cul = -1;
-            for (; i + 1 < n && A[i + 1] <= A[i]; i++, cnt++) {
-                rst += cul;
-                cul -= (A[i + 1] < A[i] ? 1 : 0);
+            else if (A[i] == A[i + 1]) {
+                money[i + 1] = money[i];
             }
-            rst += (-cul + 1) * cnt;
-            if (cnt != 0)
-                rst += Math.max(mountain_top, -cul + 1) * (num_same_cul + 1);
-            else
-                rst += mountain_top * (num_same_cul + 1);
         }
-        return rst;
+        int sum = 0;
+        for (int i = A.length - 1; i > 0; i--) {
+            if (A[i] < A[i - 1]) {
+                money[i - 1] = Math.max(money[i] + 1, money[i - 1]);
+            }
+            else if (A[i] == A[i - 1]) {
+                money[i - 1] = Math.max(money[i], money[i - 1]);
+            }
+            sum += money[i];
+        }
+        sum += money[0];
+        return sum;
     }
 }
